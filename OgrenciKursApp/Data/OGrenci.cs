@@ -2,7 +2,7 @@
 
 namespace OgrenciKursApp.Data
 {
-    public class OGrenci
+    public class Ogrenci
     {
         [Key]
         public int OgrenciId { get; set; }
