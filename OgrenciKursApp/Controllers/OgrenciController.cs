@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OgrenciKursApp.Data;
 
@@ -6,6 +7,7 @@ namespace OgrenciKursApp.Controllers
 {
     public class OgrenciController : Controller
     {
+        //DB'ye okuma özelliğiyle context oluşturdum. Her seferinde oluşturmaktansa buradan çekmek mantıklı olanıdır.
         private readonly DataContext _context;
         public OgrenciController(DataContext context)
         {
@@ -14,9 +16,11 @@ namespace OgrenciKursApp.Controllers
 
         }
 
-        public IActionResult Index()
+        //Öğrencileri liste şeklinde sunucudan çektim
+        public async Task< IActionResult> Index()
         {
-            return View();
+          //var ogrenciler =  await _context.Ogrenciler.ToListAsync();
+            return View(await _context.Ogrenciler.ToListAsync());
         }
 
         public IActionResult Create()
@@ -24,13 +28,15 @@ namespace OgrenciKursApp.Controllers
             return View();
         }
 
+
+        //Gelen verileri db'ye gönderdim.
         [HttpPost]
         public async Task<IActionResult> Create(Ogrenci model)
         {
 
             _context.Ogrenciler.Add(model);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
            
         }
     }
