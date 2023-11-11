@@ -12,7 +12,7 @@ namespace OgrenciKursApp.Data
         public DbSet<Ogrenci> Ogrenciler => Set<Ogrenci>();
         public DbSet<KursKayit> KursKayitlari => Set<KursKayit>();
 
-        // DbSet'lere karşılık gelen veritabanı tablolarını tanımlayın
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Kurs>().ToTable("Kurslar");
