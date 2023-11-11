@@ -17,9 +17,9 @@ namespace OgrenciKursApp.Controllers
         }
 
         //Öğrencileri liste şeklinde sunucudan çektim
-        public async Task< IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-          //var ogrenciler =  await _context.Ogrenciler.ToListAsync();
+            //var ogrenciler =  await _context.Ogrenciler.ToListAsync();
             return View(await _context.Ogrenciler.ToListAsync());
         }
 
@@ -30,17 +30,17 @@ namespace OgrenciKursApp.Controllers
 
         //Edit metotu. ID'ye erişemezse, geçiyor varsa giriyor ve bilgilerini de atıyor. FindAsync veya FirstOrDefaultAsync ile kayıtları check'liyorum.
         [HttpGet]
-        public async Task<IActionResult> Edit(int? id )
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id==null)
+            if (id == null)
             {
                 return NotFound();
             }
-           
-            var ogrenci= await _context.Ogrenciler.FindAsync(id);
-           //var ogrenci= await _context.Ogrenciler.FirstOrDefaultAsync(o=> o.OgrenciId== id);
-           
-            if (ogrenci==null)
+
+            var ogrenci = await _context.Ogrenciler.FindAsync(id);
+            //var ogrenci= await _context.Ogrenciler.FirstOrDefaultAsync(o=> o.OgrenciId== id);
+
+            if (ogrenci == null)
             {
                 return NotFound();
             }
@@ -65,7 +65,7 @@ namespace OgrenciKursApp.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
 
-                    if (!_context.Ogrenciler.Any(o=>o.OgrenciId==model.OgrenciId))    //öğrenci bulanamadı ise
+                    if (!_context.Ogrenciler.Any(o => o.OgrenciId == model.OgrenciId))    //öğrenci bulanamadı ise
                     {
                         return NotFound();
                     }
@@ -74,7 +74,7 @@ namespace OgrenciKursApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");   
+                return RedirectToAction("Index");
             }
             return View(model);
 
@@ -89,7 +89,35 @@ namespace OgrenciKursApp.Controllers
             _context.Ogrenciler.Add(model);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
-           
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var ogrenci = await _context.Ogrenciler.FindAsync(id);
+            if (ogrenci == null)
+            {
+                return NotFound();
+            }
+            return View(ogrenci);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromForm]int id)   //Hangi id karmaşası yaşamamak için form'un içindeki Id'yi aldım demek bu.
+        {
+            var ogrenci = await _context.Ogrenciler.FindAsync(id);
+            if (ogrenci ==null)
+            {
+                return NotFound();
+            }
+            _context.Ogrenciler.Remove(ogrenci);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }
