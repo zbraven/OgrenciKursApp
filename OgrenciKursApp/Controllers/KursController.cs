@@ -1,26 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OgrenciKursApp.Data;
 
 namespace OgrenciKursApp.Controllers
 {
-    public class OgrenciController : Controller
+    public class KursController : Controller
     {
-        //DB'ye okuma özelliğiyle context oluşturdum. Her seferinde oluşturmaktansa buradan çekmek mantıklı olanıdır.
-        private readonly DataContext _context;
-        public OgrenciController(DataContext context)
+        private readonly DataContext _context;  
+        public KursController(DataContext context)
         {
-
-            _context = context;
-
+            _context=context;
         }
-
-        //Öğrencileri liste şeklinde sunucudan çektim
         public async Task<IActionResult> Index()
         {
-            //var ogrenciler =  await _context.Ogrenciler.ToListAsync();
-            return View(await _context.Ogrenciler.ToListAsync());
+            var kurslar= await _context.Kurslar.ToListAsync();
+            return View(kurslar);
         }
 
         public IActionResult Create()
@@ -28,18 +22,18 @@ namespace OgrenciKursApp.Controllers
             return View();
         }
 
-        //Gelen verileri db'ye gönderdim.
         [HttpPost]
-        public async Task<IActionResult> Create(Ogrenci model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Kurs model)
         {
 
-            _context.Ogrenciler.Add(model);
+            _context.Kurslar.Add(model);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
 
         }
 
-        //Edit metotu. ID'ye erişemezse, geçiyor varsa giriyor ve bilgilerini de atıyor. FindAsync veya FirstOrDefaultAsync ile kayıtları check'liyorum.
+
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -48,21 +42,20 @@ namespace OgrenciKursApp.Controllers
                 return NotFound();
             }
 
-            var ogrenci = await _context.Ogrenciler.FindAsync(id);
-            //var ogrenci= await _context.Ogrenciler.FirstOrDefaultAsync(o=> o.OgrenciId== id);
+            var kurs = await _context.Kurslar.FindAsync(id);
 
-            if (ogrenci == null)
+            if (kurs == null)
             {
                 return NotFound();
             }
-            return View(ogrenci);
+            return View(kurs);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Ogrenci model)
+        public async Task<IActionResult> Edit(int id, Kurs model)
         {
-            if (id != model.OgrenciId)
+            if (id != model.KursId)
             {
                 return NotFound();
             }
@@ -76,7 +69,7 @@ namespace OgrenciKursApp.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
 
-                    if (!_context.Ogrenciler.Any(o => o.OgrenciId == model.OgrenciId))    //öğrenci bulanamadı ise
+                    if (!_context.Kurslar.Any(k => k.KursId == model.KursId))    
                     {
                         return NotFound();
                     }
@@ -92,7 +85,6 @@ namespace OgrenciKursApp.Controllers
 
         }
 
-       
 
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
@@ -101,24 +93,25 @@ namespace OgrenciKursApp.Controllers
             {
                 return NotFound();
             }
-            var ogrenci = await _context.Ogrenciler.FindAsync(id);
-            if (ogrenci == null)
+            var kurs = await _context.Kurslar.FindAsync(id);
+
+            if (kurs == null)
             {
                 return NotFound();
             }
-            return View(ogrenci);
+            return View(kurs);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete([FromForm]int id)   //Hangi id karmaşası yaşamamak için form'un içindeki Id'yi aldım demek bu.
+        public async Task<IActionResult> Delete([FromForm] int id)   
         {
-            var ogrenci = await _context.Ogrenciler.FindAsync(id);
-            if (ogrenci ==null)
+            var kurs = await _context.Kurslar.FindAsync(id);
+            if (kurs == null)
             {
                 return NotFound();
             }
-            _context.Ogrenciler.Remove(ogrenci);
+            _context.Kurslar.Remove(kurs);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
