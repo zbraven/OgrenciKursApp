@@ -8,8 +8,18 @@ namespace OgrenciKursApp.Data
         public int OgrenciId { get; set; }
         public string? OgrenciAd { get; set; }
         public string? OgrenciSoyad { get; set; }
+
+        //Öğrenci adını soyadını getiriyorum buradan. Set'lenmiyor. Hazırdakini getiriyor.
+        public string AdSoyad
+        {
+            get
+            {
+                return this.OgrenciAd + " " + this.OgrenciSoyad;
+            }
+
+        }
         public string? Eposta { get; set; }
         public string? Telefon { get; set; }
-       
+
     }
 }

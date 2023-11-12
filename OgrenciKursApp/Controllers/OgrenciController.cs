@@ -30,6 +30,7 @@ namespace OgrenciKursApp.Controllers
 
         //Gelen verileri db'ye gönderdim.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Ogrenci model)
         {
 
