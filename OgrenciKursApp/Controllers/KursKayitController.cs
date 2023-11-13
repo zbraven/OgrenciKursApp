@@ -12,16 +12,23 @@ namespace OgrenciKursApp.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+
+        //Include ile join'leri yapıyorum.
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var kursKayitlari = await _context
+                .KursKayitlari
+                .Include(x => x.Ogrenci)
+                .Include(x => x.Kurs)
+                .ToListAsync();
+            return View(kursKayitlari);
         }
 
         public async Task<IActionResult> Create()
         {
-            ViewBag.Ogrenciler= new SelectList(await _context.Ogrenciler.ToListAsync(), "OgrenciId", "AdSoyad");
-            ViewBag.Kurslar= new SelectList(await _context.Kurslar.ToListAsync(), "KursId", "Baslik");
-            
+            ViewBag.Ogrenciler = new SelectList(await _context.Ogrenciler.ToListAsync(), "OgrenciId", "AdSoyad");
+            ViewBag.Kurslar = new SelectList(await _context.Kurslar.ToListAsync(), "KursId", "Baslik");
+
             return View();
         }
 
@@ -30,7 +37,7 @@ namespace OgrenciKursApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(KursKayit model)
         {
-            model.KayitTarihi= DateTime.Now;
+            model.KayitTarihi = DateTime.Now;
             _context.KursKayitlari.Add(model);
             await _context.SaveChangesAsync();
 
