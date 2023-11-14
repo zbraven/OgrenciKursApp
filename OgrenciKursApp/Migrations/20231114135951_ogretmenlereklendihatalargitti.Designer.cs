@@ -12,8 +12,8 @@ using OgrenciKursApp.Data;
 namespace OgrenciKursApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231113164159_Zahid")]
-    partial class Zahid
+    [Migration("20231114135951_ogretmenlereklendihatalargitti")]
+    partial class ogretmenlereklendihatalargitti
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
